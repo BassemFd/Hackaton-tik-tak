@@ -7,7 +7,14 @@ var journeyModel = require('../models/journey.js')
 var city = ["Paris","Marseille","Nantes","Lyon","Rennes","Melun","Bordeaux","Lille"]
 var date = ["2018-11-20","2018-11-21","2018-11-22","2018-11-23","2018-11-24"]
 
-
+let sens = function (d) {   
+  let month = String(d.getMonth() + 1);   
+  let day = String(d.getDate());   
+  const year = String(d.getFullYear());    
+  if (month.length < 2) month = '0' + month;   
+  if (day.length < 2) day = '0' + day;    
+  return `${day}/${month}/${year}`; 
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -90,22 +97,16 @@ router.post('/destination', async function(req, res, next){
 
   req.session.date = req.body.datepicked.split('/').reverse().join('/')
   
-var finalDate = req.session.date.split('-').reverse().join('-')
+var finalDate = req.session.date.split('-').reverse().join('/')
 console.log(finalDate)
 
 var destinationList = [];
 
   var journey = await journeyModel.find()
+  
 for(let i = 0; i < journey.length; i++){
-// var searchJourney = await new journeyModel({
-//   departure: journey[i].departure,
-//   arrival: journey[i].arrival,
-//   date: req.body.datepicked,
-//   departureTime: journey[i].departureTime,
-//   price: journey[i].price,
 
-// })
-if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival ){
+if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
 
   destinationList.push(journey[i]);
 }} 

@@ -23,11 +23,11 @@
         <div class="d-flex justify-content-between">
           
           <div class="mx-1 fw-bold"><%=destinationList[i].departure%>/<%=destinationList[i].arrival%></div>
-          <div class="mx-1">train departure at: <%=sens(destinationList[i].date)%></div>
+          <div class="mx-1">train departure at: <%=destinationList[i].departureTime%></div>
           
           <div class="d-flex">
             <div class="mx-1 fw-bold"><%=destinationList[i].price%>€</div>
-            <form>
+            <form method="POST">
               <input class="btn btn-danger btn-sm mx-1" value="OK" type="submit" name="selection">
             </form>
           </div>
