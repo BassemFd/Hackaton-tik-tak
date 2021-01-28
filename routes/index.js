@@ -96,14 +96,14 @@ router.get('/dispo', function(req, res, next) {
 router.post('/destination', async function(req, res, next){
 
   req.session.date = req.body.datepicked.split('/').reverse().join('/')
-  
+  console.log(req.body)
 var finalDate = req.session.date.split('-').reverse().join('/')
 console.log(finalDate)
 
 var destinationList = [];
 
   var journey = await journeyModel.find()
-  
+
 for(let i = 0; i < journey.length; i++){
 
 if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
