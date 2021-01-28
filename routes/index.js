@@ -1,20 +1,17 @@
 var express = require('express');
 var router = express.Router();
-
-
 var journeyModel = require('../models/journey.js')
-
 var city = ["Paris","Marseille","Nantes","Lyon","Rennes","Melun","Bordeaux","Lille"]
 var date = ["2018-11-20","2018-11-21","2018-11-22","2018-11-23","2018-11-24"]
 
 let sens = function (d) {   
-  let month = String(d.getMonth() + 1);   
-  let day = String(d.getDate());   
-  const year = String(d.getFullYear());    
-  if (month.length < 2) month = '0' + month;   
-  if (day.length < 2) day = '0' + day;    
-  return `${day}/${month}/${year}`; 
-}
+    let month = String(d.getMonth() + 1);   
+    let day = String(d.getDate());   
+    const year = String(d.getFullYear());    
+    if (month.length < 2) month = '0' + month;   
+    if (day.length < 2) day = '0' + day;    
+    return `${day}/${month}/${year}`; 
+  }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -24,30 +21,24 @@ router.get('/', function(req, res, next) {
 
 // Remplissage de la base de donnée, une fois suffit
 router.get('/save', async function(req, res, next) {
-
   // How many journeys we want
   var count = 300
-
   // Save  ---------------------------------------------------
     for(var i = 0; i< count; i++){
-
     departureCity = city[Math.floor(Math.random() * Math.floor(city.length))]
     arrivalCity = city[Math.floor(Math.random() * Math.floor(city.length))]
 
-    if(departureCity != arrivalCity){
-
-      var newUser = new journeyModel ({
-        departure: departureCity , 
-        arrival: arrivalCity, 
-        date: date[Math.floor(Math.random() * Math.floor(date.length))],
-        departureTime:Math.floor(Math.random() * Math.floor(23)) + ":00",
-        price: Math.floor(Math.random() * Math.floor(125)) + 25,
-      });
-       
-       await newUser.save();
-
-    }
-
+      if(departureCity != arrivalCity){
+          var newUser = new journeyModel ({
+            departure: departureCity , 
+            arrival: arrivalCity, 
+            date: date[Math.floor(Math.random() * Math.floor(date.length))],
+            departureTime:Math.floor(Math.random() * Math.floor(23)) + ":00",
+            price: Math.floor(Math.random() * Math.floor(125)) + 25,
+          });
+        
+        await newUser.save();
+      }
   }
   res.render('index', { title: 'Ticketac' });
 });
@@ -59,7 +50,6 @@ router.get('/result', function(req, res, next) {
 
   // Permet de savoir combien de trajets il y a par ville en base
   for(i=0; i<city.length; i++){
-
     journeyModel.find( 
       { departure: city[i] } , //filtre
   
@@ -70,8 +60,6 @@ router.get('/result', function(req, res, next) {
     )
 
   }
-
-
   res.render('index', { title: 'Ticketac' });
 });
 
@@ -92,29 +80,28 @@ router.get('/dispo', function(req, res, next) {
   res.render('dispo', { title: 'Ticketac' });
 });
 
-
+//! get destination and arrival from user
 router.post('/destination', async function(req, res, next){
-
+  
   req.session.date = req.body.datepicked.split('/').reverse().join('/')
-  console.log(req.body)
-var finalDate = req.session.date.split('-').reverse().join('/')
-console.log(finalDate)
-
-var destinationList = [];
-
+  var finalDate = req.session.date.split('-').reverse().join('/')
+  var destinationList = [];
   var journey = await journeyModel.find()
 
-for(let i = 0; i < journey.length; i++){
-
-if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
-
-  destinationList.push(journey[i]);
-}} 
+  for(let i = 0; i < journey.length; i++){
+      if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
+        destinationList.push(journey[i]);
+      }} 
 
 res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
+});
 
 
- 
+// ! selecting destination through get to go to user basket
+
+router.get('/add-destination', function(req, res, next) {
+  
+  res.render('order', { title: 'Ticketac' });
 });
 
 

@@ -27,9 +27,9 @@
           
           <div class="d-flex">
             <div class="mx-1 fw-bold"><%=destinationList[i].price%>€</div>
-            <form method="POST">
-              <input class="btn btn-danger btn-sm mx-1" value="OK" type="submit" name="selection">
-            </form>
+            <a href="/add-destination?id=<%= destinationList[i].id%>&departure=<%=destinationList[i].departure%>&arrival=<%=destinationList[i].arrival%>&departureTime=<%=destinationList[i].departureTime%>&price=<%=destinationList[i].price%>" class="btn btn-danger btn-sm mx-1">OK</a>
+            
+            
           </div>
         </div>
       </li>
