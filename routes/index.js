@@ -68,4 +68,40 @@ router.get('/result', function(req, res, next) {
   res.render('index', { title: 'Ticketac' });
 });
 
+
+
+//! get homepage
+router.get('/homepage', function(req, res, next) {
+  res.render('homepage', { title: 'Ticketac' });
+});
+
+//! get oops page
+router.get('/oops', function(req, res, next) {
+  res.render('oops', { title: 'Ticketac' });
+});
+
+router.post('/destination', async function(req, res, next){
+var destinationList = [];
+
+  var journey = await journeyModel.find()
+for(let i = 0; i < journey.length; i++){
+// var searchJourney = await new journeyModel({
+//   departure: journey[i].departure,
+//   arrival: journey[i].arrival,
+//   date: req.body.datepicked,
+//   departureTime: journey[i].departureTime,
+//   price: journey[i].price,
+
+// })
+if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival ){
+destinationList.push(journey[i]);
+
+console.table("THISSSSSSSSSS", destinationList)
+res.render('dispo', {title: 'Ticketac', destinationList})
+} 
+}
+ 
+});
+
+
 module.exports = router;
