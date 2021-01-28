@@ -80,6 +80,12 @@ router.get('/oops', function(req, res, next) {
   res.render('oops', { title: 'Ticketac' });
 });
 
+//! get dispo page
+router.get('/dispo', function(req, res, next) {
+  res.render('dispo', { title: 'Ticketac' });
+});
+
+
 router.post('/destination', async function(req, res, next){
 var destinationList = [];
 
@@ -94,12 +100,13 @@ for(let i = 0; i < journey.length; i++){
 
 // })
 if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival ){
-destinationList.push(journey[i]);
-
-console.table("THISSSSSSSSSS", destinationList)
+console.log(journey[i])
+  destinationList.push(journey[i]);
+}} 
+console.log("THISSSSSSSSSS", destinationList)
 res.render('dispo', {title: 'Ticketac', destinationList})
-} 
-}
+
+
  
 });
 
