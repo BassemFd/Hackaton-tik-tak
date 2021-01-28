@@ -37,5 +37,8 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: url("../images/undraw_travel_together_re_kjf2.svg");
+  background-position: center ;
+  background-repeat: no-repeat;
 }
 
