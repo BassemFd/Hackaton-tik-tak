@@ -8,9 +8,27 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var models = require('./routes/index')
 
+
+
+
 var app = express();
 require('./models/connect');
 var session = require("express-session");
+app.locals.dateFormat = function(date){    
+  var newDate = new Date(date);
+  var format = newDate.getDate()+'/'+(newDate.getMonth()+1)+"/"+newDate.getFullYear()    
+  return format;  
+  };
+
+
+  app.locals.sens = function (d) {   
+    let month = String(d.getMonth() + 1);   
+    let day = String(d.getDate());   
+    const year = String(d.getFullYear());    
+    if (month.length < 2) month = '0' + month;   
+    if (day.length < 2) day = '0' + day;    
+    return `${day}/${month}/${year}`; 
+  }
 
 app.use(
   session({ 

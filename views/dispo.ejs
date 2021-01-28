@@ -15,13 +15,15 @@
   <%- include('header'); %>
 <div class="home">
   <div>
+  
+  <p>Tickets available on: <%=finalDate%></p>
     <ul class="list-group list-group-flush ">
       <% for(let i = 0; i < destinationList.length; i++){ %>
       <li class="list-group-item my-2 ">
         <div class="d-flex justify-content-between">
           
           <div class="mx-1 fw-bold"><%=destinationList[i].departure%>/<%=destinationList[i].arrival%></div>
-          <div class="mx-1">train departure at: <%=destinationList[i].date%></div>
+          <div class="mx-1">train departure at: <%=sens(destinationList[i].date)%></div>
           
           <div class="d-flex">
             <div class="mx-1 fw-bold"><%=destinationList[i].price%>€</div>

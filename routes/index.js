@@ -87,6 +87,12 @@ router.get('/dispo', function(req, res, next) {
 
 
 router.post('/destination', async function(req, res, next){
+
+  req.session.date = req.body.datepicked.split('/').reverse().join('/')
+  
+var finalDate = req.session.date.split('-').reverse().join('-')
+console.log(finalDate)
+
 var destinationList = [];
 
   var journey = await journeyModel.find()
@@ -100,11 +106,11 @@ for(let i = 0; i < journey.length; i++){
 
 // })
 if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival ){
-console.log(journey[i])
+
   destinationList.push(journey[i]);
 }} 
-console.log("THISSSSSSSSSS", destinationList)
-res.render('dispo', {title: 'Ticketac', destinationList})
+
+res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
 
 
  
