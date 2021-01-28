@@ -6,3 +6,18 @@ body {
 a {
   color: #00B7FF;
 }
+
+
+.last-trips {
+  margin-left: auto;
+  margin-right: 15px;
+}
+
+.batman {
+  width: 15%;
+}
+
+.londrina {
+  font-family: 'Londrina Solid', cursive;
+
+}
