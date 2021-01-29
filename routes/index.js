@@ -2,16 +2,14 @@ var express = require('express');
 var router = express.Router();
 var journeyModel = require('../models/journey.js');
 var userModel = require('../models/users.js');
-var DestinationModel = require('../models/destinations');
-const { route } = require('./users.js');
+
+
 var city = ["Paris","Marseille","Nantes","Lyon","Rennes","Melun","Bordeaux","Lille"]
 var date = ["2018-11-20","2018-11-21","2018-11-22","2018-11-23","2018-11-24"]
 
 
 
-
-
-
+// ! fonction pour formater la date
 let sens = function (d) {   
     let month = String(d.getMonth() + 1);   
     let day = String(d.getDate());   
@@ -27,7 +25,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-// Remplissage de la base de donnée, une fois suffit
+//! Remplissage de la base de donnée, une fois suffit
 router.get('/save', async function(req, res, next) {
   // How many journeys we want
   var count = 300
@@ -52,7 +50,7 @@ router.get('/save', async function(req, res, next) {
 });
 
 
-// Cette route est juste une verification du Save.
+//! Cette route est juste une verification du Save.
 // Vous pouvez choisir de la garder ou la supprimer.
 router.get('/result', function(req, res, next) {
 
@@ -62,11 +60,9 @@ router.get('/result', function(req, res, next) {
       { departure: city[i] } , //filtre
   
       function (err, journey) {
-
           console.log(`Nombre de trajets au départ de ${journey[0].departure} : `, journey.length);
       }
     )
-
   }
   res.render('index', { title: 'Ticketac' });
 });
@@ -89,14 +85,13 @@ router.get('/dispo', function(req, res, next) {
 });
 
 //! get order page
-
 router.get('/order', function(req, res, next) {
   res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
 });
 
 //! get last trips page
 router.get('/last-trips', async function(req, res, next) {
-  var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec();
+   var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec();
   res.render('last-trips', { title: 'Ticketac', user});
 });
 
@@ -105,29 +100,26 @@ router.get('/last-trips', async function(req, res, next) {
 //! get destination and arrival from user
 
 router.post('/destination', async function(req, res, next){
-  
-  
+  // * Formating the date ---
   req.session.date = req.body.datepicked.split('/').reverse().join('/')
   var finalDate = req.session.date.split('-').reverse().join('/')
+
   var destinationList = [];
   var journey = await journeyModel.find()
 
-  
   function capitalize(word) {
     return word[0].toUpperCase() + word.slice(1).toLowerCase();
   }
 
   var FROMLOWER = capitalize(req.body.from);
-  // console.log(FROMLOWER);
-  
   var TOLOWER = capitalize(req.body.to);
-  // console.log(TOLOWER);
+
+
   for(let i = 0; i < journey.length; i++){
       if(FROMLOWER === journey[i].departure && TOLOWER === journey[i].arrival && finalDate === sens(journey[i].date)){
         destinationList.push(journey[i]);
         req.session.index = journey[i].id;
       }} 
-
 
 res.render('dispo', {title: 'Ticketac', destinationList, finalDate: req.session.finalDate, index: req.session.index})
 });
@@ -138,54 +130,54 @@ res.render('dispo', {title: 'Ticketac', destinationList, finalDate: req.session.
 
 
 router.get('/add-destination', function(req, res, next) {
-if(req.session.cart === undefined){
-req.session.cart = [];
-}
-req.session.cart.push({
-  departure: req.query.departure,
-  arrival: req.query.arrival,
-  date: req.query.date,
-  departureTime: req.query.departureTime,
-  price: req.query.price,
-  id: req.query.id
-})
+  
+  if(req.session.cart === undefined){
+      req.session.cart = [];
+      }
 
-let total = 0;
+  req.session.cart.push({
+    departure: req.query.departure,
+    arrival: req.query.arrival,
+    date: req.query.date,
+    departureTime: req.query.departureTime,
+    price: req.query.price,
+    id: req.query.id
+  })
 
-for(let i = 0; i < req.session.cart.length; i++){
-  total += parseInt(req.session.cart[i].price)
-}
-req.session.total = total
+  let total = 0;
+
+  for(let i = 0; i < req.session.cart.length; i++){
+      total += parseInt(req.session.cart[i].price)
+      }
+
+  req.session.total = total
 
   res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
-
 });
 
-  
+  //! Delete selection
 
 router.get('/delete', async function (req, res, next){
   req.session.cart.splice(req.query.index,  1)
-req.session.total = req.session.total - req.query.price
-
-
+  req.session.total = req.session.total - req.query.price
   res.redirect('order' )
 })
 
+//! confirm payment
+
 router.get('/confirm', async function(req, res, next){
+//? P 2/2 using clés étrangères P1/2 in Models/users.js
+    for(let i = 0; i<req.session.cart.length; i++){
+        var updateUser = await userModel.updateOne(
+          { _id: req.session.user.id},
+          { $push: { destinations: req.session.cart[i].id } }
+        )
+      }
 
-for(let i = 0; i<req.session.cart.length; i++){
+      //? POPULATE/EXEC, doesn't modify, just reads, attribute to a variable to use this said variable (user in this case)
+    var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec(); 
 
-var updateUser = await userModel.updateOne(
-    { _id: req.session.user.id},
-    { $push: { destinations: req.session.cart[i].id } }
-)
-}
-
-var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec();
-
-
-
-  res.render('last-trips', {title: 'Ticketac', user})
+res.render('last-trips', {title: 'Ticketac', user})
 })
 
 
