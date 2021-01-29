@@ -132,7 +132,7 @@ router.post('/destination', async function(req, res, next){
       }} 
 
 
-res.render('dispo', {title: 'Ticketac', destinationList, finalDate, index: req.session.index})
+res.render('dispo', {title: 'Ticketac', destinationList, finalDate: req.session.finalDate, index: req.session.index})
 });
 
 
