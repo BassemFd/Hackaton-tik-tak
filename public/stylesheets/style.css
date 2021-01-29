@@ -42,3 +42,11 @@ a {
   background-repeat: no-repeat;
 }
 
+footer {
+  display: flex;
+  font-size: 12px;
+  justify-content: center;
+  padding: 5px;
+  color: black;
+}
+

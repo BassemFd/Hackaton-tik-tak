@@ -103,6 +103,7 @@ router.get('/last-trips', async function(req, res, next) {
 
 
 //! get destination and arrival from user
+
 router.post('/destination', async function(req, res, next){
   
   
@@ -111,14 +112,27 @@ router.post('/destination', async function(req, res, next){
   var destinationList = [];
   var journey = await journeyModel.find()
 
+  
+  function capitalize(word) {
+    return word[0].toUpperCase() + word.slice(1).toLowerCase();
+  }
+
+  var FROMLOWER = capitalize(req.body.from);
+  // console.log(FROMLOWER);
+  
+  var TOLOWER = capitalize(req.body.to);
+  // console.log(TOLOWER);
+
+
+
   for(let i = 0; i < journey.length; i++){
-      if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
+      if(FROMLOWER === journey[i].departure && TOLOWER === journey[i].arrival && finalDate === sens(journey[i].date)){
         destinationList.push(journey[i]);
-        req.session.finalDate = finalDate
+        req.session.index = journey[i].id;
       }} 
 
 
-res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
+res.render('dispo', {title: 'Ticketac', destinationList, finalDate, index: req.session.index})
 });
 
 
@@ -127,9 +141,6 @@ res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
 
 
 router.get('/add-destination', function(req, res, next) {
-
-console.log( req.session.finalDate)
-
 if(req.session.cart === undefined){
 req.session.cart = [];
 }
@@ -142,6 +153,8 @@ req.session.cart.push({
   id: req.query.id
 })
 
+
+  res.render('order', { title: 'Ticketac', destinations: req.session.cart });
 let total = 0;
 
 for(let i = 0; i < req.session.cart.length; i++){
