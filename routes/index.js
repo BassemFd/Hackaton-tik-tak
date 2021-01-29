@@ -73,10 +73,7 @@ router.get('/result', function(req, res, next) {
 
 //! get homepage
 router.get('/homepage', function(req, res, next) {
-  let userId = req.session.user.id
-  console.log("Hello", userId)
-
-  res.render('homepage', { title: 'Ticketac', userId });
+  res.render('homepage', { title: 'Ticketac' });
 });
 
 //! get oops page
@@ -98,11 +95,7 @@ router.get('/order', function(req, res, next) {
 //! get destination and arrival from user
 router.post('/destination', async function(req, res, next){
   
-  let userId = req.session.user.id
-  console.log("Hello2", userId)
-
-
-
+  
   req.session.date = req.body.datepicked.split('/').reverse().join('/')
   var finalDate = req.session.date.split('-').reverse().join('/')
   var destinationList = [];
@@ -111,9 +104,11 @@ router.post('/destination', async function(req, res, next){
   for(let i = 0; i < journey.length; i++){
       if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
         destinationList.push(journey[i]);
+        req.session.index = journey[i].id;
       }} 
 
-res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
+
+res.render('dispo', {title: 'Ticketac', destinationList, finalDate, index: req.session.index})
 });
 
 
@@ -121,16 +116,11 @@ res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
 
 
 
-router.get('/add-destination', async function(req, res, next) {
-
-  let userId = req.session.user.id
-  console.log("Hello3", userId)
-
-
-let destiny = await userModel.findById(userId);
-
-
-destiny.destinations.push({
+router.get('/add-destination', function(req, res, next) {
+if(req.session.cart === undefined){
+req.session.cart = [];
+}
+req.session.cart.push({
   departure: req.query.departure,
   arrival: req.query.arrival,
   date: req.query.date,
@@ -138,14 +128,12 @@ destiny.destinations.push({
   price: req.query.price,
 })
 
-await destiny.save();
 
-console.log(destiny)
-
-
-
-  res.render('order', { title: 'Ticketac', destiny });
+  res.render('order', { title: 'Ticketac', destinations: req.session.cart });
 });
+
+
+
 
 
 module.exports = router;
