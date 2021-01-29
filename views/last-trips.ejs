@@ -13,6 +13,42 @@
   </head>
   <body>
     <%- include('header'); %>
+    
+    
+    
+    <div class="home">
+
+
+      <ul class="list-group list-group-flush ">
+
+    <p>     Your trips history: </p>
+
+        <%for(let i = 0; i < user.destinations.length; i++){%>
+         
+           <li class="list-group-item  ">
+               <div class="d-flex justify-content-between"> 
+                 <div class="mx-3 ">#<%=[i+1]%></div>
+                 <div class="mx-1 fw-bold"><%=user.destinations[i].departure%>/<%=user.destinations[i].arrival%></div>
+                 <div class="mx-1">train departure at: <%=user.destinations[i].departureTime%></div>
+                 <div class="d-flex">
+                   <div class="mx-1 fw-bold"><%=user.destinations[i].price%>€</div>
+                   
+                 </div>
+             </div>
+           </li>
+   <%}%>
+
+      </ul>
+
+
+
+
+
+    </div>
+
+
+
+
 
   
     <!-- Bootstrap CSS -->

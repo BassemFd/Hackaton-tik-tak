@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var journeyModel = require('../models/journey.js');
 var userModel = require('../models/users.js');
+var DestinationModel = require('../models/destinations');
+const { route } = require('./users.js');
 var city = ["Paris","Marseille","Nantes","Lyon","Rennes","Melun","Bordeaux","Lille"]
 var date = ["2018-11-20","2018-11-21","2018-11-22","2018-11-23","2018-11-24"]
 
@@ -92,6 +94,14 @@ router.get('/order', function(req, res, next) {
   res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
 });
 
+//! get last trips page
+router.get('/last-trips', async function(req, res, next) {
+  var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec();
+  res.render('last-trips', { title: 'Ticketac', user});
+});
+
+
+
 //! get destination and arrival from user
 router.post('/destination', async function(req, res, next){
   
@@ -143,19 +153,29 @@ req.session.total = total
 });
 
 router.get('/delete', async function (req, res, next){
- 
-
-
- req.session.cart.splice(req.query.index,  1)
- 
-
+  req.session.cart.splice(req.query.index,  1)
 req.session.total = req.session.total - req.query.price
 
 
   res.redirect('order' )
 })
 
+router.get('/confirm', async function(req, res, next){
 
+for(let i = 0; i<req.session.cart.length; i++){
+
+var updateUser = await userModel.updateOne(
+    { _id: req.session.user.id},
+    { $push: { destinations: req.session.cart[i].id } }
+)
+}
+
+var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec();
+
+
+
+  res.render('last-trips', {title: 'Ticketac', user})
+})
 
 
 
