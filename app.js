@@ -14,6 +14,7 @@ var models = require('./routes/index')
 var app = express();
 require('./models/connect');
 var session = require("express-session");
+
 app.locals.dateFormat = function(date){    
   var newDate = new Date(date);
   var format = newDate.getDate()+'/'+(newDate.getMonth()+1)+"/"+newDate.getFullYear()    

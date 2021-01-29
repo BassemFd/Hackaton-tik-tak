@@ -154,7 +154,8 @@ req.session.cart.push({
 })
 
 
-  res.render('order', { title: 'Ticketac', destinations: req.session.cart });
+  res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
+
 let total = 0;
 
 for(let i = 0; i < req.session.cart.length; i++){
