@@ -122,9 +122,6 @@ router.post('/destination', async function(req, res, next){
   
   var TOLOWER = capitalize(req.body.to);
   // console.log(TOLOWER);
-
-
-
   for(let i = 0; i < journey.length; i++){
       if(FROMLOWER === journey[i].departure && TOLOWER === journey[i].arrival && finalDate === sens(journey[i].date)){
         destinationList.push(journey[i]);
@@ -153,9 +150,6 @@ req.session.cart.push({
   id: req.query.id
 })
 
-
-  res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
-
 let total = 0;
 
 for(let i = 0; i < req.session.cart.length; i++){
@@ -163,8 +157,11 @@ for(let i = 0; i < req.session.cart.length; i++){
 }
 req.session.total = total
 
-  res.redirect('order');
+  res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
+
 });
+
+  
 
 router.get('/delete', async function (req, res, next){
   req.session.cart.splice(req.query.index,  1)
