@@ -93,6 +93,7 @@ router.get('/order', function(req, res, next) {
 });
 
 //! get destination and arrival from user
+
 router.post('/destination', async function(req, res, next){
   
   
@@ -101,8 +102,21 @@ router.post('/destination', async function(req, res, next){
   var destinationList = [];
   var journey = await journeyModel.find()
 
+  
+  function capitalize(word) {
+    return word[0].toUpperCase() + word.slice(1).toLowerCase();
+  }
+
+  var FROMLOWER = capitalize(req.body.from);
+  // console.log(FROMLOWER);
+  
+  var TOLOWER = capitalize(req.body.to);
+  // console.log(TOLOWER);
+
+
+
   for(let i = 0; i < journey.length; i++){
-      if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
+      if(FROMLOWER === journey[i].departure && TOLOWER === journey[i].arrival && finalDate === sens(journey[i].date)){
         destinationList.push(journey[i]);
         req.session.index = journey[i].id;
       }} 
