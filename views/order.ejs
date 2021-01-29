@@ -13,8 +13,33 @@
   </head>
   <body>
     <%- include('header'); %>
+<div class="home">
 
-  
+    <div>
+      <p class="londrina">My Chosen Destinations: </p>
+     <%for(let i = 0; i < destiny.destinations.length; i++){%>
+      <ul class="list-group list-group-flush ">
+        <li class="list-group-item my-2 ">
+            <div class="d-flex justify-content-between"> 
+              <div class="mx-1 fw-bold"><%=destiny.destinations[i].departure%>/<%=destiny.destinations[i].arrival%></div>
+              <div class="mx-1">train departure at: <%=destiny.destinations[i].departureTime%></div>
+              <div class="d-flex">
+                <div class="mx-1 fw-bold"><%=destiny.destinations[i].price%>€</div>
+              </div>
+          </div>
+        </li>
+    </ul>
+<%}%>
+
+  </div>
+
+</div>  
+
+
+
+
+
+
     <!-- Bootstrap CSS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
   </body>

@@ -1,8 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var journeyModel = require('../models/journey.js')
+var journeyModel = require('../models/journey.js');
+var userModel = require('../models/users.js');
 var city = ["Paris","Marseille","Nantes","Lyon","Rennes","Melun","Bordeaux","Lille"]
 var date = ["2018-11-20","2018-11-21","2018-11-22","2018-11-23","2018-11-24"]
+
+
+
+
+
 
 let sens = function (d) {   
     let month = String(d.getMonth() + 1);   
@@ -67,7 +73,10 @@ router.get('/result', function(req, res, next) {
 
 //! get homepage
 router.get('/homepage', function(req, res, next) {
-  res.render('homepage', { title: 'Ticketac' });
+  let userId = req.session.user.id
+  console.log("Hello", userId)
+
+  res.render('homepage', { title: 'Ticketac', userId });
 });
 
 //! get oops page
@@ -80,9 +89,20 @@ router.get('/dispo', function(req, res, next) {
   res.render('dispo', { title: 'Ticketac' });
 });
 
+//! get order page
+
+router.get('/order', function(req, res, next) {
+  res.render('order', { title: 'Ticketac' });
+});
+
 //! get destination and arrival from user
 router.post('/destination', async function(req, res, next){
   
+  let userId = req.session.user.id
+  console.log("Hello2", userId)
+
+
+
   req.session.date = req.body.datepicked.split('/').reverse().join('/')
   var finalDate = req.session.date.split('-').reverse().join('/')
   var destinationList = [];
@@ -99,9 +119,32 @@ res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
 
 // ! selecting destination through get to go to user basket
 
-router.get('/add-destination', function(req, res, next) {
-  
-  res.render('order', { title: 'Ticketac' });
+
+
+router.get('/add-destination', async function(req, res, next) {
+
+  let userId = req.session.user.id
+  console.log("Hello3", userId)
+
+
+let destiny = await userModel.findById(userId);
+
+
+destiny.destinations.push({
+  departure: req.query.departure,
+  arrival: req.query.arrival,
+  date: req.query.date,
+  departureTime: req.query.departureTime,
+  price: req.query.price,
+})
+
+await destiny.save();
+
+console.log(destiny)
+
+
+
+  res.render('order', { title: 'Ticketac', destiny });
 });
 
 
