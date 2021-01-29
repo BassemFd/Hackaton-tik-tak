@@ -89,7 +89,7 @@ router.get('/dispo', function(req, res, next) {
 //! get order page
 
 router.get('/order', function(req, res, next) {
-  res.render('order', { title: 'Ticketac' });
+  res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
 });
 
 //! get destination and arrival from user
@@ -126,11 +126,33 @@ req.session.cart.push({
   date: req.query.date,
   departureTime: req.query.departureTime,
   price: req.query.price,
+  id: req.query.id
 })
 
 
   res.render('order', { title: 'Ticketac', destinations: req.session.cart });
+let total = 0;
+
+for(let i = 0; i < req.session.cart.length; i++){
+  total += parseInt(req.session.cart[i].price)
+}
+req.session.total = total
+
+  res.redirect('order');
 });
+
+router.get('/delete', async function (req, res, next){
+ 
+
+
+ req.session.cart.splice(req.query.index,  1)
+ 
+
+req.session.total = req.session.total - req.query.price
+
+
+  res.redirect('order' )
+})
 
 
 
