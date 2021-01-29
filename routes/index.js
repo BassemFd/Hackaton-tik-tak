@@ -104,11 +104,11 @@ router.post('/destination', async function(req, res, next){
   for(let i = 0; i < journey.length; i++){
       if(req.body.from === journey[i].departure && req.body.to === journey[i].arrival && finalDate === sens(journey[i].date)){
         destinationList.push(journey[i]);
-        req.session.finalDate = finalDate
+        req.session.index = journey[i].id;
       }} 
 
 
-res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
+res.render('dispo', {title: 'Ticketac', destinationList, finalDate, index: req.session.index})
 });
 
 
@@ -117,9 +117,6 @@ res.render('dispo', {title: 'Ticketac', destinationList, finalDate})
 
 
 router.get('/add-destination', function(req, res, next) {
-
-console.log( req.session.finalDate)
-
 if(req.session.cart === undefined){
 req.session.cart = [];
 }
@@ -131,14 +128,8 @@ req.session.cart.push({
   price: req.query.price,
 })
 
-let total = 0;
-console.log(req.session.cart[0].price)
-for(let i = 0; i < req.session.cart.length; i++){
-  total += parseInt(req.session.cart[i].price)
-}
 
-console.log(total)
-  res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total });
+  res.render('order', { title: 'Ticketac', destinations: req.session.cart });
 });
 
 
