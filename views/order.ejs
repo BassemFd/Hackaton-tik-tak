@@ -16,11 +16,16 @@
 <div class="home">
 
     <div>
-      <p class="londrina">My Chosen Destinations: </p>
-     <%for(let i = 0; i < destinations.length; i++){%>
+      <p class="londrina">My Chosen Tickets: <%=finalDate%></p>
       <ul class="list-group list-group-flush ">
-        <li class="list-group-item my-2 ">
+
+      
+
+     <%for(let i = 0; i < destinations.length; i++){%>
+      
+        <li class="list-group-item  ">
             <div class="d-flex justify-content-between"> 
+              <div class="mx-3 ">#<%=[i+1]%></div>
               <div class="mx-1 fw-bold"><%=destinations[i].departure%>/<%=destinations[i].arrival%></div>
               <div class="mx-1">train departure at: <%=destinations[i].departureTime%></div>
               <div class="d-flex">
@@ -28,8 +33,20 @@
               </div>
           </div>
         </li>
-    </ul>
 <%}%>
+<li class="list-group-item list-group-item-danger border">
+  
+  <div class="d-flex justify-content-between"> 
+    <div class="mx-1 fw-bold">TOTAL: </div>
+    <div class="mx-1"></div>
+    <div class="d-flex">
+      <div class="mx-1 fw-bold"><%=total%>€</div>
+    </div>
+</div>
+</li>
+
+</ul>
+
 
   </div>
 
