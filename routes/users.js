@@ -54,15 +54,15 @@ router.post('/sign-in', async function(req,res,next){
   if(searchUser!= null){
     req.session.user = {
       name: searchUser.name,
-      id: searchUser._id
-    }
+      id: searchUser._id,
+    } 
     res.redirect('/homepage')
   } else {
-    res.render('/')
+    res.render('oops-wrong', { title: 'Ticketac' })
   }
 
-  
 });
+
 
 //! Route log-out
 
@@ -72,8 +72,6 @@ router.get('/logout', function(req,res,next){
 
   res.redirect('/')
 });
-
-
 
 
 module.exports = router;
