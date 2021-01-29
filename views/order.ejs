@@ -31,11 +31,11 @@
               <div class="d-flex">
                 <div class="mx-1 fw-bold"><%=destinations[i].price%>€</div>
               </div>
+          <a href="/delete?index=<%=[i]%>&price=<%=destinations[i].price%>" type="button" class="btn btn-outline-danger btn-sm">Delete</a>
           </div>
         </li>
 <%}%>
 <li class="list-group-item list-group-item-danger border">
-  
   <div class="d-flex justify-content-between"> 
     <div class="mx-1 fw-bold">TOTAL: </div>
     <div class="mx-1"></div>
@@ -44,10 +44,31 @@
     </div>
 </div>
 </li>
-
 </ul>
+<div class="d-grid mt-3  justify-content-md-end">
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Confirm
+</button>
+
+<!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirm Payment ?</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="/confirm" type="button" class="btn btn-danger">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
+</div>
   </div>
 
 </div>  
