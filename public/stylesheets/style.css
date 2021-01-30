@@ -50,3 +50,17 @@ footer {
   color: black;
 }
 
+
+.mario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+
+#player {
+  position: relative;
+  width: 5%;
+}
