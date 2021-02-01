@@ -21,6 +21,16 @@ let sens = function (d) {
 
 //! GET home page. */
 router.get('/', function(req, res, next) {
+  const url = require('url');
+
+  const adress = 'http://localhost:3000/default.html?age=24&name=Yaya';
+  
+  const parseUrl = url.parse(adress, true);
+  
+  console.log(parseUrl.host);
+  console.log(parseUrl.pathname);
+  console.log(parseUrl.port);
+  console.log(parseUrl.query);
   res.render('index', { title: 'Ticketac' });
 });
 
@@ -71,6 +81,7 @@ router.get('/result', function(req, res, next) {
 
 //! get homepage
 router.get('/homepage', function(req, res, next) {
+  
   res.render('homepage', { title: 'Ticketac' });
 });
 
@@ -136,6 +147,8 @@ res.render('dispo', {title: 'Ticketac', destinationList, finalDate: req.session.
 
 router.get('/add-destination', function(req, res, next) {
   
+
+
   if(req.session.cart === undefined){
       req.session.cart = [];
       }
@@ -156,9 +169,16 @@ router.get('/add-destination', function(req, res, next) {
       }
 
   req.session.total = total
+  res.redirect('/add-destination2');
+    });
 
+ 
+  router.get('/add-destination2', function(req, res, next) {
   res.render('order', { title: 'Ticketac', destinations: req.session.cart, finalDate: req.session.finalDate, total: req.session.total });
 });
+
+
+
 
   //! Delete selection
 
@@ -179,6 +199,7 @@ console.log(req.session.cart)
           { $push: { destinations: req.session.cart[i].id } }
         )
       }
+      req.session.cart = [];
 
       //? POPULATE/EXEC, doesn't modify, just reads, attribute to a variable to use this said variable (user in this case)
     var user = await userModel.findById({ _id: req.session.user.id}).populate('destinations').exec(); 
@@ -191,16 +212,10 @@ res.render('last-trips', {title: 'Ticketac', user, destinations: req.session.car
 //! delete all from trips history
 
 router.get('/delete-all', async function (req, res, next){
-  
 
-
-      //? POPULATE/EXEC, doesn't modify, just reads, attribute to a variable to use this said variable (user in this case)
-    var user = await userModel.findById({ _id: req.session.user.id})
- 
-    user.destinations.pull()
-
-    await user.save();
-
+   var user =  await userModel.updateOne({ _id: req.session.user.id},
+      {destinations: []}
+      )
 res.redirect('last-trips')
     });
 
